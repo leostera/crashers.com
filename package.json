@@ -1,0 +1,37 @@
+{
+  "name": "travel-with-friends",
+  "private": true,
+  "dependencies": {
+    "react": "^0.14.7",
+    "react-dom": "^0.14.7",
+    "rxjs": "^5.0.0-beta.1"
+  },
+  "devDependencies": {
+    "bootstrap": "^3.3.6",
+    "babel-jest": "~6.0.1",
+    "babel-plugin-transform-runtime": "~6.4.3",
+    "babel-preset-es2015": "~6.3.13",
+    "babel-preset-react": "~6.3.13",
+    "babelify": "~7.2.0",
+    "beefy": "^2.1.5",
+    "browserify": "~6.2.0",
+    "cssmin": "^0.4.3",
+    "envify": "~3.0.0",
+    "jest-cli": "^0.8.2",
+    "react-addons-test-utils": "~0.15.0-alpha.1",
+    "reactify": "~1.1.1",
+    "uglify-js": "~2.4.15",
+    "watchify": "~2.1.1"
+  },
+  "scripts": {
+    "upload": "s3cmd put -P --recursive index.html build s3://apps.ostera.io/crashers/",
+    "start": "watchify -t [envify --NODE_ENV local] -o build/bundle.js -v -d src/index.js & sass -w ./styles:./build"
+  },
+  "browserify": {
+    "transform": [
+      "babelify",
+      "reactify",
+      "envify"
+    ]
+  }
+}
