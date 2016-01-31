@@ -1,4 +1,49 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans)
 
+@import "../node_modules/normalize.css/normalize.css"
+
+$blue: #2A8FFF
+$blue_dark: #2173C4
+$blue_light: #509AE3
+$aqua: #00D2E8
+$green: #00D2E8
+$white: #FEFEFE
+
 body
   font-family: Open Sans
+  background-color: $blue
+  color: $white
+
+*
+  box-sizing: border-box
+
+.invite-friends
+  width: 100%
+  text-align: center
+  background-color: $aqua
+  padding: .5rem
+
+button
+  margin: 0 1rem
+  padding: 0.5rem
+  border: none
+  border-radius: 3px
+  background-color: $blue_dark
+
+  &:hover
+    background-color: $blue_light
+  &:active
+    background-color: $blue
+
+.container
+  width: 75%
+  margin: 0 auto
+
+.friend-picture
+  border-radius: 100px
+  margin: 0 0.5rem
+
+.friend-name, .friend-location
+  display: inline-block
+  transform: translateY(-100%)
+  padding: 0 0.5rem
