@@ -7,10 +7,6 @@ export default React.createClass({
     onLogin: React.PropTypes.func.isRequired,
   },
 
-  componentDidMount: function () {
-    FB.init(this.props.config.init);
-  },
-
   login: function () {
     FB.login(this.props.onLogin, this.props.config.login);
   },

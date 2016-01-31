@@ -1,8 +1,10 @@
 import React from 'react';
+import Parse from 'parse';
 
 import InviteFriends from './InviteFriends';
 
 import { Observable } from 'rxjs';
+import './Utils';
 
 export default React.createClass({
 
@@ -16,7 +18,8 @@ export default React.createClass({
 
   getInitialState: function () {
     return {
-      friends: []
+      friends: [],
+      friendsOfFriends: [],
     };
   },
 
@@ -54,24 +57,57 @@ export default React.createClass({
         .take(friends.length)
         .subscribe(function (friends) {
           console.log("Friends", friends);
+
           let userFriends = this.props.user.get("friends");
           let friendIds = friends.map( (f) => f.id );
           let allIds = userFriends.concat(friendIds);
-          let uniqIds = allIds.filter( (f, pos) => {
-            return allIds.indexOf(f) == pos;
-          });
+          let uniqIds = allIds.unique();
+
           this.props.user.set('friends', uniqIds);
           this.props.user.save();
-          this.setState({ friends });
+
+          // gets friends of friends
+          let Profile = Parse.Object.extend("Profile");
+          let idQuery = new Parse.Query(Profile);
+            idQuery.containedIn("fb_id", uniqIds);
+
+          let fofsQuery = uniqIds.map((id) => {
+            let q = new Parse.Query(Profile);
+            q.equalTo("friends", id);
+            return q;
+          });
+          let query = Parse.Query.or.apply(null, [idQuery, ...fofsQuery]);
+          query.include("friends");
+
+          query.find({
+            success: function (fs) {
+              console.log("Found all these people", fs.map( (f) => f.get('fb_id') ));
+
+              let fofs = fs.filter( (f) => {
+                return [...uniqIds, this.props.user.get('fb_id')].indexOf(f.get('fb_id')) === -1
+              }).map( (f) => {
+                return {
+                  id: f.get('fb_id'),
+                  name: f.get('name'),
+                  location: f.get('location')
+                };
+              });
+
+              console.log("Of which these are not direct friends", fofs.map( (f) => f.id ));
+
+              this.setState({ friends, friendsOfFriends: fofs });
+            }.bind(this)
+          });
         }.bind(this));
     }
   },
 
-  friends: function () {
-    if(this.state.friends.length === 0) {
+  friends: function (key) {
+    console.log("getting ", key, "=>", this.state[key]);
+    if(this.state[key].length === 0) {
       return "Boo hoo! You have no friends!";
     } else {
-      return this.state.friends.filter( (friend) => {
+      return this.state[key].filter( (friend) => {
         return friend.location !== undefined;
       }).map( (friend) => {
         return (<section key={friend.id}>{friend.name} - {friend.location}</section>);
@@ -82,7 +118,9 @@ export default React.createClass({
   render: function () {
     return (<section>
       <InviteFriends />
-      {this.friends()}
+      {this.friends('friends')}
+      <hr />
+      {this.friends('friendsOfFriends')}
     </section>);
   }
 

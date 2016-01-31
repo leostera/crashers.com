@@ -20,7 +20,9 @@ export default React.createClass({
   },
 
   componentDidMount: function () {
+    FB.init(this.config.init);
     Parse.initialize("2LcS4gYGGQ5ocNki74Iat1aOZNJePjSkS87ANnDU", "WPePc76VeJMUgdQMduqIS5TAZkiiWCb0ErbJBuFt");
+    FB.getLoginStatus(this.onLogin);
   },
 
   getInitialState: function () {
@@ -56,6 +58,7 @@ export default React.createClass({
                 }
               });
             } else {
+              console.log('Found user', users[0]);
               this.user = users[0];
             }
             this.setState({
