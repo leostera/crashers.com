@@ -16,7 +16,7 @@ export default React.createClass({
   },
 
   render: function () {
-    return (<button onClick={this.login}> Login with Facebook </button>);
+    return (<button className="facebook-button" onClick={this.login}> Login with Facebook </button>);
   }
 
 });
