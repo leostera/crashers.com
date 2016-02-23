@@ -1,7 +1,10 @@
 import React from 'react';
 
+
 import Parse from 'parse';
 
+import NavBar from './NavBar';
+import UserPicture from './UserPicture';
 import FBLogin from './FBLogin';
 import FriendsList from './FriendsList';
 
@@ -73,14 +76,20 @@ export default React.createClass({
 
   body: function () {
     if(this.state.isLoggedIn) {
-      return (<FriendsList user={this.state.user} />);
+      return (<section>
+        <InviteFriends />
+        <FriendsList user={this.state.user} />
+      </section>);
     } else {
       return (<FBLogin config={this.config} onLogin={this.onLogin} />)
     }
   },
 
   render: function () {
-    return (<section>{this.body()}</section>);
+    return (<section>
+      <NavBar user={this.state.user} />
+      {this.body()}
+    </section>);
   }
 
 });

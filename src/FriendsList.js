@@ -111,9 +111,8 @@ export default React.createClass({
       return this.state[key].filter( (friend) => {
         return friend.location !== undefined;
       }).map( (friend) => {
-        let url = `//graph.facebook.com/v2.5/${friend.id}/picture`;
         return (<section className="friend" key={friend.id}>
-          <img  className="friend-picture" src={url} />
+          <UserPicture user={friend} />
           <span className="friend-name">{friend.name}</span>
           <span className="friend-location">{friend.location}</span>
           </section>);
@@ -122,9 +121,7 @@ export default React.createClass({
   },
 
   render: function () {
-    return (<section>
-      <InviteFriends />
-      <section className="container">
+    return (<section className="container">
         <h2>Friends</h2>
         <section className="friends">
           {this.friends('friends')}
@@ -133,8 +130,7 @@ export default React.createClass({
         <section className="friends-of-friends">
           {this.friends('friendsOfFriends')}
         </section>
-      </section>
-    </section>);
+      </section>);
   }
 
 });

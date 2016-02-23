@@ -27,6 +27,7 @@
     "watchify": "~2.1.1"
   },
   "scripts": {
+    "release": "npm run package && npm run upload",
     "package": "browserify -t [envify --NODE_ENV production] src/index.js -o build/bundle.js && uglifyjs build/bundle.js -cm -o build/bundle.js && sass --update ./styles:./build --style compressed",
     "upload": "s3cmd put -P --recursive index.html build s3://apps.ostera.io/crashers/",
     "start": "watchify -t [envify --NODE_ENV local] -o build/bundle.js -v -d src/index.js & sass -w ./styles:./build"
